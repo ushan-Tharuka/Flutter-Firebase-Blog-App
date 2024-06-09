@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 100),
                   Text('Login',
                       style: Theme.of(context).textTheme.displaySmall),
-                  const Text('Please enter Email and Password to get started.'),
+                  const Text('Enter Email and Password to get started.'),
                   const SizedBox(height: 40),
                   TextFormField(
                     controller: email,

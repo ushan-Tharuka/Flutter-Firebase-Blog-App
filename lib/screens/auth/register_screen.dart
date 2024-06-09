@@ -31,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text('Register',
                       style: Theme.of(context).textTheme.displaySmall),
                   const Text(
-                      'Please enter Name, Email and Password to get started.'),
+                      'Enter Name, Email and Password to get started.'),
                   const SizedBox(height: 40),
                   TextFormField(
                     controller: name,
