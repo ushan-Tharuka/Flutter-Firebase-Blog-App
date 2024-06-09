@@ -1,4 +1,6 @@
 import 'package:blog_app/screens/auth/login_screen.dart';
+import 'package:blog_app/screens/home/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -15,6 +17,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final password = TextEditingController();
   //validate form
   final formKey = GlobalKey<FormState>();
+  final auth = FirebaseAuth.instance;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 100),
                   Text('Register',
                       style: Theme.of(context).textTheme.displaySmall),
-                  const Text(
-                      'Enter Name, Email and Password to get started.'),
+                  const Text('Enter Name, Email and Password to get started.'),
                   const SizedBox(height: 40),
                   TextFormField(
                     controller: name,
@@ -59,6 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: password,
+                    obscureText: true,
                     decoration: const InputDecoration(hintText: 'Password'),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -68,12 +72,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {}
-                    },
-                    child: const Text("Register"),
-                  ),
+                  loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              startRegister();
+                            }
+                          },
+                          child: const Text("Register"),
+                        ),
                 ],
               ),
             ),
@@ -89,5 +100,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
     );
+  }
+
+  //Register funtion
+  startRegister() async {
+    try {
+      final result = await auth.createUserWithEmailAndPassword(
+          email: email.text, password: password.text);
+      await result.user?.updateDisplayName(name.text);
+      setState(() {
+        loading = false;
+      });
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false);
+    } on FirebaseException catch (e) {
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message ?? ''),
+      ));
+    }
   }
 }

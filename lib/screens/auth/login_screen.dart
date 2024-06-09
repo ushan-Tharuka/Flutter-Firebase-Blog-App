@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    obscureText: true,
                     controller: password,
                     decoration: const InputDecoration(hintText: 'Password'),
                     validator: (value) {
