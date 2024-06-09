@@ -1,4 +1,6 @@
 import 'package:blog_app/screens/auth/register_screen.dart';
+import 'package:blog_app/screens/home/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final password = TextEditingController();
   //validate form
   final formKey = GlobalKey<FormState>();
+  final auth = FirebaseAuth.instance;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +58,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {}
-                    },
-                    child: const Text("Login"),
-                  ),
+                  //loading button
+                  loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              startLogin();
+                            }
+                          },
+                          child: const Text("Login"),
+                        ),
                 ],
               ),
             ),
@@ -75,5 +87,27 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+//Login funtion
+  startLogin() async {
+    try {
+      await auth.signInWithEmailAndPassword(
+          email: email.text, password: password.text);
+      setState(() {
+        loading = false;
+      });
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false);
+    } on FirebaseException catch (e) {
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.message ?? ''),
+      ));
+    }
   }
 }
