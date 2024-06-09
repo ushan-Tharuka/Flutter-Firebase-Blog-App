@@ -1,15 +1,16 @@
-import 'package:blog_app/screens/auth/register_screen.dart';
+import 'package:blog_app/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   //controller for get text from text feild
+  final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   //validate form
@@ -27,10 +28,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(15),
                 children: [
                   const SizedBox(height: 100),
-                  Text('Login',
+                  Text('Register',
                       style: Theme.of(context).textTheme.displaySmall),
-                  const Text('Please enter Email and Password to get started.'),
+                  const Text(
+                      'Please enter Name, Email and Password to get started.'),
                   const SizedBox(height: 40),
+                  TextFormField(
+                    controller: name,
+                    decoration: const InputDecoration(hintText: 'Name'),
+                    //if not Enter email
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: email,
                     decoration: const InputDecoration(hintText: 'Email'),
@@ -58,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (formKey.currentState!.validate()) {}
                     },
-                    child: const Text("Login"),
+                    child: const Text("Register"),
                   ),
                 ],
               ),
@@ -67,9 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
           OutlinedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const RegisterScreen()));
+                  MaterialPageRoute(builder: (_) => const LoginScreen()));
             },
-            child: const Text("Don't have an account? Register now"),
+            child: const Text("Already have an account? Login now"),
           ),
           const SizedBox(height: 15),
         ],
