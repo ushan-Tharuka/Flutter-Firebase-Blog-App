@@ -8,29 +8,53 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  //controller for get text from text feild
+  final email = TextEditingController();
+  final password = TextEditingController();
+  //validate form
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.all(15),
-        children: [
-          const SizedBox(height: 100),
-          Text('Login', style: Theme.of(context).textTheme.displaySmall),
-          Text('Please enter Email and Password to get started.'),
-          const SizedBox(height: 40),
-          TextFormField(
-            decoration: InputDecoration(hintText: 'Email'),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            decoration: InputDecoration(hintText: 'Password'),
-          ),
-          const SizedBox(height: 40),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text("Login"),
-          ),
-        ],
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(15),
+          children: [
+            const SizedBox(height: 100),
+            Text('Login', style: Theme.of(context).textTheme.displaySmall),
+            const Text('Please enter Email and Password to get started.'),
+            const SizedBox(height: 40),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Email'),
+              //if not Enter email
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter Email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Password'),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter Password';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {}
+              },
+              child: const Text("Login"),
+            ),
+          ],
+        ),
       ),
     );
   }
