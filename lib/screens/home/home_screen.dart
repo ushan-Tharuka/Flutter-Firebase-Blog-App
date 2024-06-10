@@ -1,6 +1,8 @@
 import 'package:blog_app/models/blog.dart';
 import 'package:blog_app/screens/add_blog/add_blog_screen.dart';
 import 'package:blog_app/screens/auth/login_screen.dart';
+import 'package:blog_app/screens/home/widgets/item_blog.dart';
+import 'package:blog_app/screens/my_blog/my_blogs_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,6 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
           //logout button
           PopupMenuButton(
               itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const MyBlogsScreen()));
+                      },
+                      child: const Text('My Blogs'),
+                    ),
                     PopupMenuItem(
                       onTap: () async {
                         //sign out user
@@ -62,13 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 blogs.add(blog);
               }
               return ListView(
-                children: [
-                  for (var blog in blogs)
-                    ListTile(
-                      title: Text(blog.title),
-                      subtitle: Text(blog.desc),
-                    )
-                ],
+                padding: const EdgeInsets.all(15),
+                children: [for (var blog in blogs) ItemBlog(blog: blog)],
               );
             }
 
